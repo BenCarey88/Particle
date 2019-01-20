@@ -1,6 +1,7 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include "Particle.h"
+#include "Emitter.h"
 
 int main(int argc, char **argv) //**argv is pointer to pointer
 {
@@ -15,6 +16,15 @@ TEST(Particle,defaultCtor)
     EXPECT_FLOAT_EQ(pos.x,0.0f);
     EXPECT_FLOAT_EQ(pos.y,0.0f);
     EXPECT_FLOAT_EQ(pos.z,0.0f);
+}
+
+TEST(Particle, userCtor)
+{
+    //construct particle with position, direction and max life
+    Particle p(Vec3(1.0f,0.0f,1.0f),Vec3(0.0f,-0.1f,0.0f),100);
+    EXPECT_EQ(p.getMaxlife(),100);
+    EXPECT_TRUE(p.getPosition()==Vec3(1.0f,0.0f,1.0f));
+    EXPECT_TRUE(p.getDirection()==Vec3(0.0f,-0.1f,0.0f));
 }
 
 TEST(Particle,setPosition)
@@ -40,8 +50,6 @@ TEST(Particle,setLifeLimit)
     Particle p;
     p.setMaxlife(100);
     p.setLife(110);
-    EXPECT_EQ(p.getLife(),0);
-    p.setLife(-10);
     EXPECT_EQ(p.getLife(),0);
 }
 
@@ -90,6 +98,16 @@ TEST(Particle,updateLife)
     EXPECT_EQ(p.getLife(),10);
 }
 
+TEST(Particle,reset)
+{
+    Particle p(Vec3(0.0f,0.0f,0.0f),Vec3(0.0f,-0.1f,0.0f),100);
+    for(size_t i=0; i<100; ++i)
+    {
+        p.update();
+    }
+    EXPECT_TRUE(p.getPosition()==Vec3(0.0f,0.0f,0.0f));
+}
+
 TEST(Vec3,defaultCtor)
 {
     Vec3 a;
@@ -110,9 +128,9 @@ TEST(Vec3,copyCtor)
 {
     Vec3 a={0.2f,-0.2f,0.0f};
     auto b=a;
-    EXPECT_FLOAT_EQ(a.x,0.2f);
-    EXPECT_FLOAT_EQ(a.y,-0.2f);
-    EXPECT_FLOAT_EQ(a.z,0.0f);
+    EXPECT_FLOAT_EQ(b.x,0.2f);
+    EXPECT_FLOAT_EQ(b.y,-0.2f);
+    EXPECT_FLOAT_EQ(b.z,0.0f);
 }
 
 TEST(Vec3, plusEquals)
@@ -123,4 +141,23 @@ TEST(Vec3, plusEquals)
     EXPECT_FLOAT_EQ(a.x,2.0f);
     EXPECT_FLOAT_EQ(a.y,3.0f);
     EXPECT_FLOAT_EQ(a.z,4.0f);
+}
+
+TEST(Vec3, equals)
+{
+    Vec3 a = {0.1f,-0.2f,2.0f};
+    Vec3 b = {0.1f,-0.2f,2.0f};
+    EXPECT_TRUE(a==b);
+}
+
+TEST(Emitter,defaultCtor)
+{
+    Emitter e;
+    EXPECT_EQ(e.getNumParticles(),0);
+}
+
+TEST(Emitter,userCtor)
+{
+    Emitter e(Vec3(0,0,0),1000);
+    EXPECT_EQ(e.getNumParticles(),1000);
 }

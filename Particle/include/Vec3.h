@@ -14,6 +14,15 @@ struct Vec3
         z+=_rhs.z;
     }
 
+#define Epsilon 0.001f
+#define FCompare( a,b ) \
+    ( ((a)-Epsilon)<(b) && ((a)+Epsilon>(b)))
+
+    bool operator ==(const Vec3 &_rhs)
+    {
+        return FCompare(x,_rhs.x) && FCompare(y,_rhs.y) && FCompare(z,_rhs.z);
+    }
+
     float x=0.0f;
     float y=0.0f;
     float z=0.0f;

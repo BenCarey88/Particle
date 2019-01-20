@@ -1,14 +1,15 @@
 #include <iostream>
 #include "Particle.h"
+#include "Emitter.h"
 
 int main()
 {
     std::cout<<"Particle Main\n";
-    Particle p;
-    p.setDirection({0.0f,0.1f,0.0f});
-    while(true)
+    Emitter e({0,0,0},100);
+
+    for(size_t i=0; i<1000; ++i)
     {
-        p.render();
-        p.update();
+        e.render();
+        e.update();
     }
 }
